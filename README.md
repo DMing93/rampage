@@ -12,15 +12,42 @@ developed on the basis of
 
 These steps are required to setup and run RAMpage:
 
-* You need to patch the Linux kernel sources in order to export a few
-  more symbols needed by the module.  You can find a patch matching
-  the Linux 3.5 sources in patches/kernelpatch-rampage-3.5-declone.diff,
-  but with some luck (and if the kernel memory management hasn't
-  changed too much) this should be portable to newer kernel versions
-  with little to no effort.  The kernel should be configured by moving
-  /config-rampage-final-2.6.35 to $kernelsource/.config and running ```make
-  oldconfig```.  (RAMpage only works with an x86-64 kernel at the moment.)
+* Download the linux kernel 4.4 source code:
 
+  ```
+  wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.4.tar.xz
+  ```
+
+* Uncompress the kernel code:
+
+  ```
+  tar xvf linux-4.4.tar.xz
+  ```
+  
+* Patch the kernel with rampage patch:
+
+  ```
+  cd linux-4.4 
+  patch -p1 < rampage/patches/kernelpatch-rampage-4.4.diff
+  ```
+
+* Copy a config file from current running system to kernel source code:
+
+  ```
+  cp /boot/config-<kernel-version> .config
+  ```
+
+  Note: *kernel-version* may not equal 4.4, but it's ok, just do it:).
+
+* Compile the kernel:
+
+  ```
+  make menuconfig 
+  make 
+  make modules_install 
+  make install 
+  ```
+  
 * After having booted the patched kernel, you need to build and insert
   the kernel module by entering module/ and running ```./rebuild.sh```.
 
