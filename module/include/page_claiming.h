@@ -19,6 +19,9 @@
 #ifndef PAGE_CLAIMING_H_
 #define PAGE_CLAIMING_H_
 
+int rampage_remove_memory(u64 start, u64 size);
+int rampage_online_pages(unsigned long pfn, unsigned long nr_pages);
+
 /**
  * Implements the Request-Pages command
  *

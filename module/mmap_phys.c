@@ -142,7 +142,7 @@ int file_mmap_configured(struct file * filp, struct vm_area_struct * vma){
       goto err;
 
     vma->vm_ops = &phys_mem_vm_ops;
-    vma->vm_flags |= VM_RESERVED;
+    vma->vm_flags |= (VM_DONTEXPAND | VM_DONTDUMP);
     vma->vm_flags |= VM_IO;
     vma->vm_private_data = session;
 

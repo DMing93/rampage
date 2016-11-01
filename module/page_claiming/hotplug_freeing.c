@@ -33,6 +33,8 @@
 #include "phys_mem_int.h"           /* local definitions */
 #include "page_claiming.h"           /* local definitions */
 
+#include <linux/memory_hotplug.h>
+
 /**
  * Free pages using memory-hotplug to increase the success rate of the buddy-claimer
  */
@@ -42,6 +44,32 @@
  * multiple of the minimum.
  */
 #define OFFLINE_AT_ONCE (1 << MAX_ORDER)
+
+int rampage_remove_memory(u64 start, u64 size)
+{
+	unsigned long start_pfn, end_pfn;
+	int ret;
+
+	start_pfn = PFN_DOWN(start);
+	end_pfn = start_pfn + PFN_DOWN(size);
+
+//	mem_hotplug_begin();
+	ret = offline_pages(start_pfn, end_pfn);
+//	mem_hotplug_done();
+
+	return ret;
+}
+
+int rampage_online_pages(unsigned long pfn, unsigned long nr_pages)
+{
+	int ret;
+
+//	mem_hotplug_begin();
+	ret = online_pages(pfn, nr_pages, MMOP_ONLINE_KEEP);
+//	mem_hotplug_done();
+
+	return ret;
+}
 
 /**
  * hotplug_bounce - unplug and replug a pageblock
@@ -53,9 +81,9 @@
 static int hotplug_bounce(u64 address) {
   int ret;
 
-  ret = remove_memory(address, OFFLINE_AT_ONCE << PAGE_SHIFT);
+  ret = rampage_remove_memory(address, OFFLINE_AT_ONCE << PAGE_SHIFT);
   if (!ret) {
-    ret = online_pages(address >> PAGE_SHIFT, OFFLINE_AT_ONCE);
+    ret = rampage_online_pages(address >> PAGE_SHIFT, OFFLINE_AT_ONCE);
     if (ret) {
       printk(KERN_EMERG "unclaim failed for pfn %08llx: ret %d\n",address >> PAGE_SHIFT,ret);
     }

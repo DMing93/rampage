@@ -258,7 +258,7 @@ bad_page(struct page *page) {
 out:
     /* Leave bad fields for debug, except PageBuddy could make trouble */
     __ClearPageBuddy(page);
-    add_taint(TAINT_BAD_PAGE);
+    add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
 }
 
 /*

@@ -68,7 +68,7 @@ void unclaim_pages_via_hotplug(struct page* requested_page) {
     //        memtester unclaims all pages at once
     // NOTE: Onlinling only clears PageReserved (mm/memory_hotplug.c:online_page),
     //       so any poison markers we added for bad pages stay active.
-    ret = online_pages(aligned_address >> PAGE_SHIFT, OFFLINE_AT_ONCE);
+    ret = rampage_online_pages(aligned_address >> PAGE_SHIFT, OFFLINE_AT_ONCE);
     if (ret) {
       printk(KERN_CRIT "physmem: unclaim failed for pfn %08llx: ret %d\n",
              aligned_address >> PAGE_SHIFT, ret);
@@ -108,12 +108,12 @@ int try_claim_pages_via_hotplug(struct page* requested_page, unsigned int allowe
     if (aligned_address == 0)
       return CLAIMED_TRY_NEXT;
 
-    ret = remove_memory(aligned_address, OFFLINE_AT_ONCE << PAGE_SHIFT);
+    ret = rampage_remove_memory(aligned_address, OFFLINE_AT_ONCE << PAGE_SHIFT);
     if (ret) {
       if (allowed_sources & SOURCE_SHAKING) {
         /* Failed, shake page and try again */
         shake_page(requested_page, 1);
-        ret = remove_memory(aligned_address, OFFLINE_AT_ONCE << PAGE_SHIFT);
+        ret = rampage_remove_memory(aligned_address, OFFLINE_AT_ONCE << PAGE_SHIFT);
         if (ret) {
           prev_failed_claim = aligned_address;
           return CLAIMED_TRY_NEXT;
