@@ -1,5 +1,9 @@
 # RAMpage
 
+NOTE: This repository is originally developed by H. Schirmeier in Linux
+kernel 3.5. Now we update RAMpage to kernel 4.4 and will continue to update. Thanks for everyone interested in RAMpage.
+-- by Wang Xiaoqiang <wang_xiaoq@126.com>
+
 This repository contains the RAMpage online memory tester for Linux, which we
 developed on the basis of
 [Jens Neuhalfen's memtester](https://github.com/neuhalje/kernel-memtest).
