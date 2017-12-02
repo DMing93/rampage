@@ -14,57 +14,52 @@ These steps are required to setup and run RAMpage:
 
 * Download the linux kernel 4.4 source code:
 
-  ```
-  wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.4.tar.xz
-  ```
+  `wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.4.tar.xz`
 
 * Uncompress the kernel code:
 
-  ```
-  tar xvf linux-4.4.tar.xz
-  ```
-  
+  `tar xvf linux-4.4.tar.xz`
+
 * Patch the kernel with rampage patch:
 
-  ```
-  cd linux-4.4 
-  patch -p1 < rampage/patches/kernelpatch-rampage-4.4.diff
-  ```
+  `cd linux-4.4`
+
+  `patch -p1 < rampage/patches/kernelpatch-rampage-4.4.diff`
 
 * Copy a config file from current running system to kernel source code:
 
-  ```
-  cp /boot/config-<kernel-version> .config
-  ```
+  `cp /boot/config-<kernel-version> .config`
 
   Note: *kernel-version* may not equal 4.4, but it's ok, just do it:).
 
 * Compile the kernel:
 
-  ```
-  make menuconfig 
-  make 
-  make modules_install 
-  make install 
-  ```
-  
+  `make menuconfig`
+
+  `make`
+
+  `make modules_install`
+
+  `make install`
+
 * After having booted the patched kernel, you need to build and insert
   the kernel module by entering module/ and running ```./rebuild.sh```.
 
 * Then you need to prepare the userspace memory tester C extensions:
 
-  ```
-cd rampage/userspace/tester  
-make && cp build/*/*.so .  
-cd ..
-  ```
+  `cd rampage/userspace/tester`
+
+  `make && cp build/*/*.so .`
+
+  `cd ..`
 
 * RAMpage should now be ready to run, for example:
-  ```
-./main.py -a blockwise --run-time 86400 --retest-time 86400 -4 -t mt86* -f 5120 --enable-p4-claimers=buddy,hotplug-claim,shaking
-  ```
 
-  ```./main.py --help``` gives an explanation for the parameters and switches.
+  `./main.py -a blockwise --run-time 86400 --retest-time 86400 -4 -t mt86* -f 5120 --enable-p4-claimers=buddy,hotplug-claim,shaking`
+
+  `./main.py --help` 
+
+gives an explanation for the parameters and switches.
 
 Be aware that RAMpage is a prototype, not production-ready software.
 One detail you certainly will have to change before using it in a multiuser
